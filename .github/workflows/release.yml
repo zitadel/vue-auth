@@ -9,8 +9,8 @@ jobs:
     name: build and release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 18
       - run: yarn
@@ -18,7 +18,7 @@ jobs:
       - run: yarn build
         working-directory: ./lib
       - name: semantic release
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v6
         with:
           working_directory: ./lib
         env:
