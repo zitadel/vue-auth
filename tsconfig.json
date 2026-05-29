@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
+    "rootDir": "src",
     "declaration": true,
     "jsx": "react-jsx",
     "lib": ["es2023", "dom", "dom.iterable"]
