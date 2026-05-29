@@ -1,0 +1,112 @@
+{
+  "name": "@zitadel/vue-auth",
+  "description": "A comprehensive authentication integration for Vue applications with TypeScript support, PKCE-based OIDC, and session management",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./routes": {
+      "types": "./dist/routes.d.ts",
+      "import": "./dist/routes.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zitadel/vue-auth.git"
+  },
+  "author": {
+    "name": "Mridang Agarwalla",
+    "email": "mridang@zitadel.com",
+    "url": "https://github.com/zitadel"
+  },
+  "scripts": {
+    "prepack": "tsc",
+    "test": "npm run test:unit",
+    "test:unit": "jest --verbose --config=jest.config.mjs --runInBand --passWithNoTests",
+    "test:watch": "npm run test:unit -- --watch",
+    "typecheck": "tsc --noEmit",
+    "test:debug": "jest --verbose --config=jest.config.mjs --runInBand --detectOpenHandles",
+    "prepare": "npm run build",
+    "build": "tsup",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "npx eslint . --fix",
+    "depcheck": "npx knip",
+    "docs": "typedoc"
+  },
+  "peerDependencies": {
+    "oidc-client-ts": ">=3.0.0",
+    "vue": ">=3.0.0",
+    "vue-router": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vue-router": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^20.5.0",
+    "@jest/globals": "^30.0.5",
+    "@mridang/eslint-defaults": "^1.6.1",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.0",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "@tsconfig/node24": "^24.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.0",
+    "@vue/compiler-dom": "^3.5.0",
+    "@vue/test-utils": "^2.4.6",
+    "eslint": "9.32.0",
+    "jest": "30.0.5",
+    "jest-environment-jsdom": "30.0.5",
+    "jest-junit": "^17.0.0",
+    "knip": "^5.66.4",
+    "oidc-client-ts": "^3.4.0",
+    "prettier": "3.6.2",
+    "semantic-release": "^25.0.3",
+    "ts-jest": "29.4.11",
+    "tsup": "^8.5.0",
+    "typedoc": "^0.28.7",
+    "typescript": "^6.0.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.0"
+  },
+  "keywords": [
+    "auth",
+    "authentication",
+    "authorization",
+    "authn",
+    "authz",
+    "oauth",
+    "oidc",
+    "jwt",
+    "jwks",
+    "pkce",
+    "vue"
+  ],
+  "private": false,
+  "homepage": "https://github.com/zitadel/vue-auth",
+  "bugs": "https://github.com/zitadel/vue-auth/issues",
+  "publishConfig": {
+    "access": "public"
+  }
+}
