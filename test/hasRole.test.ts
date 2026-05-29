@@ -26,6 +26,19 @@ describe('hasRole', () => {
     expect(hasRole(user, 'admin')).toBe(false);
   });
 
+  it('should return true for project-scoped role claims', () => {
+    const user = {
+      profile: {
+        sub: 'user-1',
+        'urn:zitadel:iam:org:project:306217913633734659:roles': {
+          admin: { '306130699507728387': 'my-org.localhost' },
+        },
+      },
+    } as unknown as User;
+
+    expect(hasRole(user, 'admin')).toBe(true);
+  });
+
   it('should return false when there is no user', () => {
     expect(hasRole(null, 'admin')).toBe(false);
   });
