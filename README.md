@@ -1,105 +1,184 @@
-# @zitadel/vue Example
+# Vue Auth
 
-Authenticate your [ZITADEL](https://zitadel.com) users within your Vue applications.
+A [Vue 3](https://vuejs.org/) integration that provides seamless
+authentication for single-page applications using OpenID Connect with the
+Authorization Code flow and PKCE, session management, and idiomatic Vue
+composables and provide/inject.
 
-![NPM Version](https://img.shields.io/npm/v/@zitadel/vue)
-![NPM License](https://img.shields.io/npm/l/@zitadel/vue)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
+This integration brings the power and flexibility of OIDC to Vue
+applications with full TypeScript support, built on top of
+[`oidc-client-ts`](https://github.com/authts/oidc-client-ts), and an API
+surface compatible with `vue-oidc-context`.
 
-> [!IMPORTANT]
-> If you want to try out [@zitadel/vue](https://www.npmjs.com/package/@zitadel/vue), read the [ZITADEL step-by-step guide for Vue](https://zitadel.com/docs/examples/login/vue).
-> It shows how to get the *client_id* and the *project_resource_id* from ZITADEL and how to wire everything up in Vue.
+### Why?
 
-## Project Structure
+Modern single-page applications require robust, secure, and flexible
+authentication systems. Integrating OIDC and session management with a Vue
+application requires careful consideration of the browser redirect lifecycle,
+silent token renewal, and TypeScript integration.
 
-The example project is generated in the repositories root directory using [Vite](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
+However, a direct integration isn't always straightforward. Different types
+of applications or deployment scenarios might warrant different approaches:
 
-The following pages are added to the scaffolded example application:
-- *src/views/Login.vue*: The protected login page shows the information retrieved from ZITADEL when a user is authenticated.
-- *src/views/Admin.vue*: The protected admin page renders different views depending on if the user has the role "admin" or not.
+- **Browser Redirect Lifecycle:** OIDC sign-in operates through full browser
+  navigations to the identity provider and back. A proper integration should
+  detect the authorization response on return, complete the code exchange, and
+  clean the authorization parameters from the URL automatically.
+- **Reactive Auth State:** Vue components need to react to authentication state
+  without boilerplate. The `useAuth()` composable exposes a reactive ref with
+  `isAuthenticated`, `isLoading`, `user`, and `error`.
+- **Route Protection:** Many applications need to gate routes behind
+  authentication. `withAuthenticationRequired()` wraps a component so that
+  unauthenticated users are redirected to sign in before it renders.
+- **Token Renewal:** Long-lived sessions require silent renewal in a hidden
+  iframe. This integration wires the `oidc-client-ts` `UserManager` events so
+  renewed tokens flow into auth state with zero manual subscription.
 
-![Example GUI](./example-gui.png)
+This integration, `@zitadel/vue-auth`, aims to provide the flexibility to
+handle such scenarios. It allows you to leverage the OIDC ecosystem while
+maintaining Vue best practices, ultimately leading to a more effective and
+less burdensome authentication implementation.
 
-The following files are added or modified to enable ZITADEL authentication:
-- *src/router/index.ts*: The routes are protected using the meta field *authName* and conditional lazy loading.
-- *src/App.vue*: The navigation bar is conditionally rendered depending on the authentication state.
-- *src/services/zitadelAuth.ts*: The [@zitadel/vue SDK](https://www.npmjs.com/package/@zitadel/vue) is configured.
-- The file *src/main.ts* shows how the Vue application is bootstrapped with ZITADEL auth support.
-- The folder *./lib* contains the [@zitadel/vue SDK](https://www.npmjs.com/package/@zitadel/vue).
+## Installation
 
-## Features
-
-The NPM package [@zitadel/vue](https://www.npmjs.com/package/@zitadel/vue) wraps the NPM package [vue-oidc-client](https://github.com/soukoku/vue-oidc-client).
-All [vue-oidc-client](https://github.com/soukoku/vue-oidc-client) features are available and the whole configuration can be overridden.
-
-The following features are added to [vue-oidc-client](https://github.com/soukoku/vue-oidc-client)
-
-- [@zitadel/vue](https://www.npmjs.com/package/@zitadel/vue) defaults as much configuration as possible.
-- [@zitadel/vue](https://www.npmjs.com/package/@zitadel/vue) provides a simple way to check for user roles.
-- An example application is provided to show how to use [@zitadel/vue](https://www.npmjs.com/package/@zitadel/vue).
-
-The following is an example for a minimal OIDC configuration:
-
-```typescript
-const zitadelAuth = createZITADELAuth({
-   issuer: `${myZITADELInstancesOrigin}`,
-   client_id: `${myApplicationsClientID}`,
-   project_resource_id: `${myApplicationsProjectResourceID}`,
-   organization_id: `${myApplicationsOrganizationID}`, // optional
-})
-```
-
-The following defaults apply:
-- The OIDC Code Flow with PKCE is used for authentication at ZITADEL.
-- ZITADELs user info endpoint is called to enrich the user profile.
-- The access token is refreshed automatically by default before it expires.
-- If you specify a *project_resource_id*, the scopes for retrieving the users roles from the user info endpoint are added automatically.
-You can conveniently use `zitadelAuth.hasRole("someRoleKey")`.
-
-Optional:
-- add an *organization_id* to register and login users directly in the organization scope.
-
-## Running the Example
-
-### Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-### Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-### Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-### Project Setup
+Install using NPM by using the following command:
 
 ```sh
-yarn
+npm install @zitadel/vue-auth oidc-client-ts
 ```
 
-#### Compile and Hot-Reload for Development
+## Usage
 
-```sh
-yarn dev
+To use this integration, wrap your application in the default-exported
+`AuthProvider` with your OIDC configuration. Configuration field names follow
+the `oidc-client-ts` `UserManagerSettings` shape.
+
+```vue
+<!-- src/App.vue -->
+<script setup lang="ts">
+import AuthProvider from '@zitadel/vue-auth';
+
+const onSigninCallback = (): void => {
+  window.history.replaceState({}, document.title, window.location.pathname);
+};
+</script>
+
+<template>
+  <AuthProvider
+    :authority="$env.VITE_ZITADEL_DOMAIN"
+    :client_id="$env.VITE_ZITADEL_CLIENT_ID"
+    :redirect_uri="$env.VITE_ZITADEL_CALLBACK_URL"
+    :post_logout_redirect_uri="$env.VITE_ZITADEL_POST_LOGOUT_URL"
+    scope="openid profile email offline_access"
+    :on-signin-callback="onSigninCallback"
+  >
+    <router-view />
+  </AuthProvider>
+</template>
 ```
 
-#### Type-Check, Compile and Minify for Production
+#### Using the Authentication System
 
-```sh
-yarn build
+The integration provides several composables, components, and helpers for
+handling authentication:
+
+**Composables and Components:**
+
+- `AuthProvider` (default export): Provides auth state and the configured
+  `UserManager` via provide/inject
+- `useAuth()`: Returns a reactive ref of the current auth state and methods
+- `useAutoSignin()`: Triggers sign-in automatically on first load
+- `withAuthenticationRequired(Component)`: Guards a component behind sign-in
+- `withAuthenticationRequiredAsync(loader)`: Same, for async components
+- `hasAuthParams()`: Detects an OIDC authorization response in the current URL
+
+**Bundled UI Components:**
+
+- `SignIn`, `SignInCallback`, `SignInError`, `SignOutCallback`, `Account`
+
+**Bundled Routes (optional, requires `vue-router`):**
+
+- `zitadelRoutes`: A ready-made route bundle under `/auth` wiring the bundled
+  components (`/auth/signin`, `/auth/callback`, `/auth/error`,
+  `/auth/logout/callback`, `/auth/account`)
+- `createAuthGuard()`: A navigation guard that protects routes flagged with
+  `meta.requiresAuth`
+
+**Basic Usage in a Component:**
+
+```vue
+<script setup lang="ts">
+import { useAuth } from '@zitadel/vue-auth';
+
+const auth = useAuth();
+</script>
+
+<template>
+  <div v-if="auth.isLoading">Loading...</div>
+  <div v-else-if="auth.error">Oops... {{ auth.error.message }}</div>
+  <div v-else-if="auth.isAuthenticated">
+    Hello {{ auth.user?.profile.sub }}
+    <button @click="auth.signoutRedirect()">Log out</button>
+  </div>
+  <button v-else @click="auth.signinRedirect()">Log in</button>
+</template>
 ```
 
-#### Lint with [ESLint](https://eslint.org/)
+**Protecting a Route:**
 
-```sh
-yarn lint
+```ts
+import { withAuthenticationRequired } from '@zitadel/vue-auth';
+import ProfileView from './ProfileView.vue';
+
+export default withAuthenticationRequired(ProfileView);
 ```
+
+##### Example: Advanced Configuration with Multiple Providers
+
+This example shows how to wire the bundled `/auth` route bundle into
+`vue-router`, while keeping your own application routes:
+
+```ts
+// src/router.ts
+import { createRouter, createWebHistory } from 'vue-router';
+import { zitadelRoutes } from '@zitadel/vue-auth/routes';
+import IndexView from './IndexView.vue';
+
+export const router = createRouter({
+  history: createWebHistory(),
+  routes: [{ path: '/', component: IndexView }, ...zitadelRoutes],
+});
+```
+
+With the bundle mounted, configure your Zitadel application's redirect URIs to
+`[origin]/auth/callback` and post-logout redirect to
+`[origin]/auth/logout/callback`.
+
+## Known Issues
+
+- **Client-Side Only:** This integration runs entirely in the browser and
+  performs the Authorization Code flow with PKCE. It does not require, and does
+  not provide, a server-side session store.
+- **Callback URLs:** Your Zitadel application must be configured with the
+  correct redirect URI matching `redirect_uri` (e.g. `[origin]/auth/callback`)
+  and post-logout redirect URI matching `post_logout_redirect_uri`.
+- **URL Cleanup:** Provide an `onSigninCallback` handler that removes the
+  authorization `code` and `state` parameters from the URL after the redirect,
+  otherwise silent renewal may misbehave.
+- **No Client Secret:** PKCE public clients must never be configured with a
+  client secret; do not ship one in browser-exposed environment variables.
+
+## Useful links
+
+- **[oidc-client-ts](https://github.com/authts/oidc-client-ts):** The
+  underlying OIDC client this integration builds on.
+- **[Vue](https://vuejs.org/):** The framework this integration targets.
+
+## Contributing
+
+If you have suggestions for how this integration could be improved, or
+want to report a bug, open an issue — we'd love all and any contributions.
+
+## License
+
+Apache-2.0
