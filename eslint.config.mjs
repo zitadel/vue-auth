@@ -2,7 +2,7 @@ import mridang from '@mridang/eslint-defaults';
 
 export default [
   {
-    ignores: ['docs/**', 'dist/**', 'build/**', '.out/**', 'playground/**'],
+    ignores: ['coverage/**', '.out/**', '.npm/**', 'docs/**', 'playground/**'],
   },
   ...mridang.configs.recommended,
   {
