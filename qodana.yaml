@@ -8,4 +8,4 @@ include:
 
 bootstrap: npm ci --no-progress
 
-linter: jetbrains/qodana-js:2025.1
+linter: jetbrains/qodana-js:2026.1
