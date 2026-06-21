@@ -1,7 +1,7 @@
 {
   "name": "@zitadel/vue-auth",
   "description": "A comprehensive authentication integration for Vue applications with TypeScript support, PKCE-based OIDC, and session management",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
