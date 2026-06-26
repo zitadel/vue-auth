@@ -29,29 +29,29 @@ jobs:
 
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           ref: ${{ inputs.ref }}
 
       - name: Download Test Reports Artifact
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: ${{ inputs.test_artifact_name }}
           path: ./qodana-downloaded-reports/test-results
 
       - name: Download Coverage Report Artifact
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: ${{ inputs.coverage_artifact_name }}
           path: ./.qodana/code-coverage
 
       - name: Run Qodana
-        uses: JetBrains/qodana-action@201551778d1453e36c5c0aa26f89a94775cb1acc # v2025.1
+        uses: JetBrains/qodana-action@f5aa2889b113c16bd6aee47817b027537ee33ac7 # v2025.1
         with:
           args: --baseline,.qodana/qodana.sarif.json
           push-fixes: true
