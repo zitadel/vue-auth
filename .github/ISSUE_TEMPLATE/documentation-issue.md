@@ -2,7 +2,7 @@
 name: Documentation Issue
 about: Missing, misleading or incomplete documentation issues
 title: ''
-labels: docs
+labels: area/docs
 assignees: ''
 ---
 
